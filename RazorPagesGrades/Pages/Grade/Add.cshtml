@@ -1,0 +1,67 @@
+﻿@page
+@model RazorPagesGrades.Pages.Grade.AddModel
+@{
+    ViewData["Title"] = "Add";
+}
+
+<h2>Add new Grade</h2>
+
+<div class="row">
+    <div class="col">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-10 offset-sm-2">
+                        <span asp-validation-for="Grade.Acronym" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <label asp-for="Grade.Acronym" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="Grade.Acronym" asp-items="Model.AcronymList" class="form-control"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-10 offset-sm-2">
+                        <span asp-validation-for="Grade.Weight" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <label asp-for="Grade.Weight" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <select asp-for="Grade.Weight" asp-items="Model.WeightList" class="form-control"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="row">
+                    <div class="col-sm-10 offset-sm-2">
+                        <span asp-validation-for="Grade.Value" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row">
+                    <label asp-for="Grade.Value" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="Grade.Value" data-val-number="Známka musí být platné číslo" class="form-control">
+                        @*@Html.TextBoxFor(model => model.Grade.Value, new { data_val_number = "Známka musí být platné číslo", htmlAttributes = new { @class = "col-sm-2 col-form-label", placeholder = @Html.DisplayNameFor(m => m.Grade.Value) } })*@
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add new Grade" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to Grades list</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

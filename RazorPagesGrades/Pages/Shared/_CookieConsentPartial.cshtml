@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Http.Features
+
+@{
+    var consentFeature = Context.Features.Get<ITrackingConsentFeature>();
+    var showBanner = !consentFeature?.CanTrack ?? false;
+    var cookieString = consentFeature?.CreateConsentCookie();
+}
+
+@if (showBanner)
+{
+
+    <nav id="cookieConsent" class="navbar navbar-light bg-light navbar-expand-sm" role="alert">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#cookieConsent .navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <p class="navbar-text pr-2">
+                Accept GDPR policy.
+            </p>
+            <div class="collapse navbar-collapse">
+                <p class="navbar-text">
+                    Use this space to summarize your privacy and cookie use policy. 
+                </p>
+                <div class="navbar-right">
+                    <a asp-page="/Privacy" class="btn btn-info navbar-btn">Learn&nbsp;More</a>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary navbar-btn" data-cookie-string="@cookieString">Accept</button>
+            </div>
+        </div>
+    </nav>
+    <script>
+        (function () {
+            document.querySelector("#cookieConsent button[data-cookie-string]").addEventListener("click", function (el) {
+                document.cookie = el.target.dataset.cookieString;
+                document.querySelector("#cookieConsent").classList.add("hidden");
+            }, false);
+        })();
+    </script>
+}
