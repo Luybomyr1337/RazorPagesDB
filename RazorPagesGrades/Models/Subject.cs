@@ -20,5 +20,6 @@ namespace RazorPagesGrades.Models
         /// Celý název předmětu - Matematika
         /// </summary>
         public string Name { get; set; }
+        public ICollection<Grade> Grades { get; set; }
     }
 }
