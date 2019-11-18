@@ -20,13 +20,13 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var i in Model.Grades)
+                @foreach (var item in Model._db.Grades)
                 {
                     <tr>
-                        <td>@i.Acronym</td>
-                        <td>@i.Subject</td>
-                        <td>@i.ValWithMinus</td>
-                        <td>@i.WeightAlpha</td>
+                        <td>@item.Acronym</td>
+                        <td>@item.Subject</td>
+                        <td>@item.ValWithMinus</td>
+                        <td>@item.WeightAlpha</td>
                     </tr>
                 }
             </tbody>

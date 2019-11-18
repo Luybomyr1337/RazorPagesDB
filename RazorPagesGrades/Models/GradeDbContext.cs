@@ -21,12 +21,6 @@ namespace RazorPagesGrades.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "MAT", Name = "Matematika" });
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "PRG", Name = "Programování" });
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "WEB", Name = "Webové aplikace" });
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "TEV", Name = "Tělocvik" });
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "CJL", Name = "Český jazyk a literatura" });
-            modelBuilder.Entity<Subject>().HasData(new Subject { Acronym = "ANJ", Name = "Anglický jazyk" });
         }
 
     }

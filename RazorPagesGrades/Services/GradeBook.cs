@@ -13,30 +13,36 @@ namespace RazorPagesGrades.Services
         ///   Řešení úschovy (částečně) persistentních dat
         ///   <Akronym, Předmět>
         /// </summary>
-        private SortedDictionary<string, Subject> _subjects { get; set; } = new SortedDictionary<string, Subject>();
+        //private SortedDictionary<string, Subject> _subjects { get; set; } = new SortedDictionary<string, Subject>();
 
-        public Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
+        //public Dictionary<Guid, Grade> _grades { get; set; } = new Dictionary<Guid, Grade>();
 
         public List<SelectListItem> SubjectListItems
         {
             get
             {
-                var list = new List<SelectListItem>(_subjects.Select(x => { return new SelectListItem() { Value = x.Key, Text = x.Key + " (" + x.Value.Name + ")" }; }));
+                var list = new List<SelectListItem>(_db.Subjects.ToList().Select(x => { return new SelectListItem() { Value = x.Acronym, Text = x.Acronym + " (" + x.Name + ")" }; }));
                 
                 return list;
             }
         }
 
+        public GradeDbContext _db { get; set; }
+        public GradeBook(GradeDbContext db)
+        {
+            _db = db;
+        }
         private static readonly Random random = new Random();
 
         public void SeedSubjects()
         {
-            _subjects.TryAdd("MAT", new Subject { Acronym = "MAT", Name = "Matematika" });
-            _subjects.TryAdd("PRG", new Subject { Acronym = "PRG", Name = "Programování" });
-            _subjects.TryAdd("WEB", new Subject { Acronym = "WEB", Name = "Webové aplikace" });
-            _subjects.TryAdd("TEV", new Subject { Acronym = "TEV", Name = "Tělocvik" });
-            _subjects.TryAdd("CJL", new Subject { Acronym = "CJL", Name = "Český jazyk a literatura" });
-            _subjects.TryAdd("ANJ", new Subject { Acronym = "ANJ", Name = "Anglický jazyk" });
+            _db.Subjects.Add(new Subject { Acronym = "MAT", Name = "Matematika" });
+            _db.Subjects.Add(new Subject { Acronym = "PRG", Name = "Programování" });
+            _db.Subjects.Add(new Subject { Acronym = "WEB", Name = "Webové aplikace" });
+            _db.Subjects.Add(new Subject { Acronym = "TEV", Name = "Tělocvik" });
+            _db.Subjects.Add(new Subject { Acronym = "CJL", Name = "Český jazyk a literatura" });
+            _db.Subjects.Add(new Subject { Acronym = "ANJ", Name = "Anglický jazyk" });
+            _db.SaveChanges();
         }
 
         public void SeedGrades(int count)
@@ -45,25 +51,25 @@ namespace RazorPagesGrades.Services
 
             for (int i = 0; i < count; i++)
             {
-                var subject = _subjects.ElementAt(random.Next(0, _subjects.Count)).Value;
-                var grade = new Grade() { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5, Weight = random.Next(1, 11) };
-                _grades.TryAdd(grade.Id, grade);
+                var subject = _db.Subjects.ToList().ElementAt(random.Next(0, 6));
+                _db.Grades.Add( new Grade { Id = Guid.NewGuid(), Subject = subject, Value = random.Next(2, 11) * 0.5, Weight = random.Next(1, 11) });
+                _db.SaveChanges();
             }
         }
 
         public IEnumerable<Grade> GetAllGrades()
         {
-            return _grades.Values;
+            return _db.Grades.ToList();
         }
 
         public IEnumerable<Grade> GetGrades(string subjectAcronym)
         {
-            return _grades.Values.Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper()));
+            return _db.Grades.Where(g => g.Subject.Acronym.Contains(subjectAcronym.ToUpper())).ToList();
         }
 
         public bool AddGrade(string acronym, double value, int weight)
         {
-            if (!_subjects.ContainsKey(acronym)) return false;
+            if (!_db.Subjects.SingleOrDefault(s => s.Acronym.Contains(acronym.ToUpper())) return false;
 
             var grade = GradeCreate(acronym, value, weight);
             return _grades.TryAdd(grade.Id, grade);
